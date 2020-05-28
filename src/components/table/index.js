@@ -12,15 +12,15 @@ import ArrowDropUpOutlinedIcon from "@material-ui/icons/ArrowDropUpOutlined";
 
 const Styles = {
   table: {
-    minWidth: 100,
+    width: "100%",
   },
   tableRow: {
     backgroundColor: "#FF4500",
     color: "white",
-    fontSize: 14,
+    fontSize: "5px",
   },
   title: {
-    fontSize: "18px",
+    fontSize: "16px",
     fontFamily: "bold",
   },
   author: {
@@ -29,7 +29,7 @@ const Styles = {
     fontStyle: "oblique",
   },
   url: {
-    fontSize: "12px",
+    fontSize: "14px",
     padding: "2px ",
   },
   button: {
@@ -38,6 +38,11 @@ const Styles = {
     height: "24px",
     fontSize: "13px",
     fontWeight: "bold",
+  },
+  rows: {
+    "&:nth-of-type(odd)": {
+      backgroundColor: "#b2beb5",
+    },
   },
 };
 
@@ -60,7 +65,10 @@ class NewsTable extends Component {
 
     return (
       <TableContainer component={Paper}>
-        <Table className={this.props.classes.table}>
+        <Table
+          className={this.props.classes.table}
+          aria-label="customized table"
+        >
           <TableHead>
             <TableRow className={this.props.classes.tableRow}>
               <TableCell className={this.props.classes.tableCell}>No</TableCell>
@@ -79,51 +87,53 @@ class NewsTable extends Component {
             </TableRow>
           </TableHead>
           <TableBody>
-            <TableRow>
-              <TableCell component="th" scope="row">
-                {rows.id}
-              </TableCell>
-              <TableCell component="th" scope="row">
-                {rows.children ? rows.children.length : 0}
-              </TableCell>
-              <TableCell>{rows.points}</TableCell>
-              <TableCell>
-                <ArrowDropUpOutlinedIcon
-                  onClick={() => {
-                    let id = rows.id;
-                    this.upVoteClick(id);
-                  }}
-                />
-              </TableCell>
-              {upVote && rows.id === upVoteId ? (
+            {rows.map((rows, index) => (
+              <TableRow key={index + 1} className={this.props.classes.rows}>
+                <TableCell component="th" scope="row">
+                  {index + 1}
+                </TableCell>
+                <TableCell component="th" scope="row">
+                  {rows.num_comments > 0 ? rows.num_comments : 0}
+                </TableCell>
+                <TableCell>{rows.points}</TableCell>
                 <TableCell>
-                  <p className={this.props.classes.title}>
-                    {rows.title}
-                    <span className={this.props.classes.url}>
-                      [{" " + rows.url}]
-                    </span>
-                    <span>
-                      by
-                      <span className={this.props.classes.author}>
-                        {" " + rows.author + " "}
+                  <ArrowDropUpOutlinedIcon
+                    onClick={() => {
+                      let id = index + 1;
+                      this.upVoteClick(id);
+                    }}
+                  />
+                </TableCell>
+                {upVote && index + 1 === upVoteId ? (
+                  <TableCell>
+                    <p className={this.props.classes.title}>
+                      {rows.title}
+                      <span className={this.props.classes.url}>
+                        [{" " + rows.url}]
                       </span>
+                      <span>
+                        by
+                        <span className={this.props.classes.author}>
+                          {" " + rows.author + " "}
+                        </span>
+                      </span>
+                    </p>
+                    <span>
+                      <Button
+                        onClick={this.hide}
+                        className={this.props.classes.button}
+                      >
+                        [ Hide]
+                      </Button>
                     </span>
-                  </p>
-                  <span>
-                    <Button
-                      onClick={this.hide}
-                      className={this.props.classes.button}
-                    >
-                      [ Hide]
-                    </Button>
-                  </span>
-                </TableCell>
-              ) : (
-                <TableCell>
-                  <p className={this.props.classes.title}>{rows.title}</p>
-                </TableCell>
-              )}
-            </TableRow>
+                  </TableCell>
+                ) : (
+                  <TableCell>
+                    <p className={this.props.classes.title}>{rows.title}</p>
+                  </TableCell>
+                )}
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>

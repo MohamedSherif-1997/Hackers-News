@@ -25,7 +25,6 @@ export default function NewsDetailsStateReducer(
       case NewsDetailsActionTypes.FETCH_News_Details_SUCCESS: {
         draft.apiStatus = ApiStatus.SUCCESS;
         draft.data = action.payload.data;
-        console.log(draft.data);
         break;
       }
       case NewsDetailsActionTypes.FETCH_News_Details_FAILURE: {
