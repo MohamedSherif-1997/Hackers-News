@@ -22,10 +22,11 @@ const NewsDetailsEpic: Epic<INewsDetailsAction, any, IState> = (
     ofType(NewsDetailsActionTypes.FETCH_News_Details),
     switchMap((action) => {
       return from(
-        axios.get(`http://hn.algolia.com/api/v1/items/${action.payload.id}`)
+        axios.get(
+          `https://hn.algolia.com/api/v1/search?page=${action.payload.id}`
+        )
       ).pipe(
         map((response) => {
-          console.log(response);
           return fetchNewsDetailsSuccess(response.data);
         }),
         catchError(() => of(fetchNewsDetailsFailure()))
