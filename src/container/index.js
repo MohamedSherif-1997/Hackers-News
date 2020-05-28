@@ -1,7 +1,12 @@
-import React from "react";
+import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
+import { connect } from "react-redux";
 
+import { ApiStatus } from "../models/apiStatus";
 import NewsTable from "../components/table";
+import Loading from "../components/Loading";
+
+import { fetchNewsDetails } from "../action/newsDetailsAction";
 
 const style = {
   content: {
@@ -11,21 +16,68 @@ const style = {
     justifyContent: "center",
     alignItems: "center",
   },
+  text: {
+    fontSize: "20px",
+    color: "red",
+  },
+  loading: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
+  },
 };
-function createData(commentsCount, votesCount, newsDetails) {
-  return { commentsCount, votesCount, newsDetails };
+class Content extends Component {
+  state = {
+    responseDate: [],
+  };
+  componentDidMount() {
+    var newsData = [];
+    for (let i = 0; i < 5; i++) {
+      // newsData =
+      if (this.props.fetchNewsDetails(i + 1) && this.props.newsDetails) {
+        newsData.push(this.props.newsDetails);
+      }
+      // ? newsData.push(this.props.newsDetails)
+      // : ;
+
+      // if (newsData.length > 0) {
+      //   this.state.responseData.push(this.props.newsDetails);
+      // } else {
+      // }
+
+      console.log(newsData, "haii");
+    }
+    this.setState({ responseData: newsData });
+  }
+
+  render() {
+    // const response = push(this.props.newsDetails);
+    return (
+      <div>
+        {this.props.apiStatus === ApiStatus.IN_PROGRESS ||
+        !this.props.newsDetails ? (
+          <div className={this.props.classes.loading}>
+            <Loading />
+            <p className={this.props.classes.text}>
+              Wait a minute Table is loding ....
+            </p>
+          </div>
+        ) : (
+          <NewsTable rows={this.props.newsDetails} />
+        )}
+      </div>
+    );
+  }
 }
-const rows = [
-  createData(237, 7, "Ice cream sandwich"),
-  createData(3, 9, "HI....JIMKJOKIMIM"),
-  createData(30, 10, "my name is khan this news from south side"),
-  createData(100, 19, "Ice cream sandwich"),
-  createData(300, 19, "my name is khan this news from south side"),
-  createData(23, 20, "HI....JIMKJOKIMIM"),
-];
-const Content = (props) => (
-  <div className={props.classes.content}>
-    <NewsTable rows={rows} />
-  </div>
-);
-export default withStyles(style)(Content);
+function mapStateToProps(state) {
+  console.log("state-====", state);
+  return {
+    newsDetails: state.data,
+    apiStatus: state.apiStatus,
+  };
+}
+
+export default connect(mapStateToProps, {
+  fetchNewsDetails,
+})(withStyles(style)(Content));

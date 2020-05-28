@@ -19,6 +19,26 @@ const Styles = {
     color: "white",
     fontSize: 14,
   },
+  title: {
+    fontSize: "18px",
+    fontFamily: "bold",
+  },
+  author: {
+    fontSize: "20px",
+    fontWeight: "bold",
+    fontStyle: "oblique",
+  },
+  url: {
+    fontSize: "12px",
+    padding: "2px ",
+  },
+  button: {
+    color: "#9400D3",
+    width: "20px",
+    height: "24px",
+    fontSize: "13px",
+    fontWeight: "bold",
+  },
 };
 
 class NewsTable extends Component {
@@ -27,7 +47,6 @@ class NewsTable extends Component {
     upVoteId: 0,
   };
   upVoteClick = (id) => {
-    console.log(id);
     this.setState({ upVoteClicked: true, upVoteId: id });
   };
   hide = () => {
@@ -48,45 +67,63 @@ class NewsTable extends Component {
               <TableCell className={this.props.classes.tableCell}>
                 Comments
               </TableCell>
-              <TableCell className={this.props.classes.tableCell} align="right">
+              <TableCell className={this.props.classes.tableCell}>
                 Vote Count
               </TableCell>
-              <TableCell className={this.props.classes.tableCell} align="right">
+              <TableCell className={this.props.classes.tableCell}>
                 Up-Vote
               </TableCell>
-              <TableCell className={this.props.classes.tableCell} align="right">
+              <TableCell className={this.props.classes.tableCell}>
                 News Details
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row, index) => (
-              <TableRow>
-                <TableCell component="th" scope="row">
-                  {index + 1}
+            <TableRow>
+              <TableCell component="th" scope="row">
+                {rows.id}
+              </TableCell>
+              <TableCell component="th" scope="row">
+                {rows.children ? rows.children.length : 0}
+              </TableCell>
+              <TableCell>{rows.points}</TableCell>
+              <TableCell>
+                <ArrowDropUpOutlinedIcon
+                  onClick={() => {
+                    let id = rows.id;
+                    this.upVoteClick(id);
+                  }}
+                />
+              </TableCell>
+              {upVote && rows.id === upVoteId ? (
+                <TableCell>
+                  <p className={this.props.classes.title}>
+                    {rows.title}
+                    <span className={this.props.classes.url}>
+                      [{" " + rows.url}]
+                    </span>
+                    <span>
+                      by
+                      <span className={this.props.classes.author}>
+                        {" " + rows.author + " "}
+                      </span>
+                    </span>
+                  </p>
+                  <span>
+                    <Button
+                      onClick={this.hide}
+                      className={this.props.classes.button}
+                    >
+                      [ Hide]
+                    </Button>
+                  </span>
                 </TableCell>
-                <TableCell component="th" scope="row">
-                  {row.commentsCount}
+              ) : (
+                <TableCell>
+                  <p className={this.props.classes.title}>{rows.title}</p>
                 </TableCell>
-                <TableCell align="right">{row.votesCount}</TableCell>
-                <TableCell align="right">
-                  <ArrowDropUpOutlinedIcon
-                    onClick={() => {
-                      let id = index;
-                      this.upVoteClick(id);
-                    }}
-                  />
-                </TableCell>
-                {upVote && index === upVoteId ? (
-                  <TableCell align="right">
-                    {row.newsDetails}
-                    <Button onClick={this.hide}>Hide</Button>
-                  </TableCell>
-                ) : (
-                  <TableCell align="right">{row.newsDetails}</TableCell>
-                )}
-              </TableRow>
-            ))}
+              )}
+            </TableRow>
           </TableBody>
         </Table>
       </TableContainer>
