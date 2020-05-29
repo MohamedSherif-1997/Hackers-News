@@ -6,14 +6,12 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
+
 import Button from "@material-ui/core/Button";
 import ArrowDropUpOutlinedIcon from "@material-ui/icons/ArrowDropUpOutlined";
+import Pagination from "../pagination";
 
 const Styles = {
-  table: {
-    width: "100%",
-  },
   tableRow: {
     backgroundColor: "#FF4500",
     color: "white",
@@ -44,12 +42,20 @@ const Styles = {
       backgroundColor: "#b2beb5",
     },
   },
+  pagination: {
+    textAlign: "end",
+  },
+  tableContainer: {
+    width: "100%",
+    border: "5px solid red",
+  },
 };
 
 class NewsTable extends Component {
   state = {
     upVoteClicked: false,
     upVoteId: 0,
+    pageNo: 0,
   };
   upVoteClick = (id) => {
     this.setState({ upVoteClicked: true, upVoteId: id });
@@ -64,11 +70,8 @@ class NewsTable extends Component {
     const upVoteId = this.state.upVoteId;
 
     return (
-      <TableContainer component={Paper}>
-        <Table
-          className={this.props.classes.table}
-          aria-label="customized table"
-        >
+      <TableContainer className={this.props.classes.tableContainer}>
+        <Table aria-label="customized table">
           <TableHead>
             <TableRow className={this.props.classes.tableRow}>
               <TableCell className={this.props.classes.tableCell}>No</TableCell>
@@ -89,10 +92,8 @@ class NewsTable extends Component {
           <TableBody>
             {rows.map((rows, index) => (
               <TableRow key={index + 1} className={this.props.classes.rows}>
-                <TableCell component="th" scope="row">
-                  {index + 1}
-                </TableCell>
-                <TableCell component="th" scope="row">
+                <TableCell>{index + 1}</TableCell>
+                <TableCell>
                   {rows.num_comments > 0 ? rows.num_comments : 0}
                 </TableCell>
                 <TableCell>{rows.points}</TableCell>
@@ -136,6 +137,13 @@ class NewsTable extends Component {
             ))}
           </TableBody>
         </Table>
+        <div className={this.props.classes.pagination}>
+          <Pagination
+            nextPageHandler={this.props.nextPageHandler}
+            previousPageHandler={this.props.previousPageHandler}
+            previousButtonDisabled={this.props.previousButtonDisabled}
+          />
+        </div>
       </TableContainer>
     );
   }
