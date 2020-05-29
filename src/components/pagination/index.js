@@ -12,7 +12,7 @@ class Pagination extends Component {
         >
           Previous
         </Button>
-        <span className={this.props.classes.separator}>|</span>
+        <span>|</span>
         <Button onClick={this.props.nextPageHandler}>Next</Button>
       </div>
     );
